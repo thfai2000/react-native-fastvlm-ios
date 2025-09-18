@@ -1,0 +1,9 @@
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ react_native_fastvlm_ios (in target 'react-native-fastvlm-ios' from project 'Pods')
+	EmitSwiftModule normal arm64 (in target 'react-native-fastvlm-ios' from project 'Pods')
+	SwiftCompile normal arm64 Compiling\ CameraType.swift /Users/tanghungfai/Desktop/Work/react-native-fastvlm-ios/node_modules/react-native-fastvlm-ios/ios/Video/CameraType.swift (in target 'react-native-fastvlm-ios' from project 'Pods')
+	Building workspace example with scheme example and configuration Debug
+(4 failures)

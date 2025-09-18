@@ -179,6 +179,29 @@ class FastVLMModel {
         currentTask = task
         return task
     }
+
+    /// Convenience wrapper used by the React Native bridge.
+    /// Accepts a simple text prompt, runs the existing `generate(_:)` flow,
+    /// waits for completion and returns the final `output` string.
+    /// Throws when the model indicates failure.
+    public func generateResponse(prompt: String) async throws -> String {
+        // Reset any previous output
+        self.output = ""
+
+        // Construct a minimal `UserInput` with just a text prompt and no images.
+        let userInput = UserInput(prompt: .text(prompt), images: [])
+
+        // Kick off generation and wait for the task to complete
+        let task = await generate(userInput)
+        _ = await task.result
+
+        // If the internal flow wrote a failure message, surface it as an error
+        if output.starts(with: "Failed:") {
+            throw NSError(domain: "FastVLMModel", code: 1, userInfo: [NSLocalizedDescriptionKey: output])
+        }
+
+        return output
+    }
     
     public func cancel() {
         currentTask?.cancel()

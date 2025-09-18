@@ -1,3 +1,4 @@
 ios/FastVLM/model
 node_modules
 example/node_modules
+*.tgz
