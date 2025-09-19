@@ -124,6 +124,20 @@ npm pack
 npm publish --access public
 ```
 
+### For npm users
+
+When you install this package, you'll get:
+
+**On packages built on macOS with Xcode:**
+- Pre-built `FastVLM.framework` and `Video.framework` 
+- No need to compile Swift code yourself
+- Faster installation and pod install process
+
+**On packages built elsewhere:**
+- Full Swift source code
+- Automatic compilation during `pod install`
+- All dependencies handled by CocoaPods/SPM
+
 ## Contributing
 
 - [Development workflow](CONTRIBUTING.md#development-workflow)

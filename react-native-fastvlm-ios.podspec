@@ -13,7 +13,27 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "13.0" }
   s.source       = { :git => "https://github.com/thfai2000/fastvlm-camera-swift.git", :tag => "#{s.version}" }
 
-  s.source_files = "ios/**/*.{h,m,mm,swift}"
+  # Check if pre-built frameworks are available
+  frameworks_dir = File.join(__dir__, "ios", "Frameworks")
+  frameworks_available = File.exist?(File.join(frameworks_dir, ".frameworks-built"))
+
+  if frameworks_available
+    # Use pre-built frameworks
+    s.source_files = "ios/{FastVLMCamera.swift,FastVLMCameraModule.m,FastVLMCameraViewManager.m,FastVLMCamera-Bridging-Header.h}"
+    
+    # Include pre-built frameworks
+    s.vendored_frameworks = "ios/Frameworks/FastVLM.framework", "ios/Frameworks/Video.framework"
+    
+    # Preserve module maps and framework contents
+    s.preserve_paths = "ios/Frameworks/**/*"
+    
+    puts "📦 Using pre-built frameworks from ios/Frameworks/"
+  else
+    # Build from source files (fallback)
+    s.source_files = "ios/**/*.{h,m,mm,swift}"
+    
+    puts "🔨 Building from source files (no pre-built frameworks found)"
+  end
 
   s.dependency "React-Core"
   

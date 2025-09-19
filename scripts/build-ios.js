@@ -112,12 +112,27 @@ async function copyBuiltFrameworks() {
     const destPath = path.join(packageFrameworksDir, frameworkName);
     
     if (fs.existsSync(srcPath)) {
+      // Copy the entire framework bundle
       fs.cpSync(srcPath, destPath, { recursive: true });
       console.log(`   ✅ Copied ${frameworkName}`);
       copiedCount++;
+      
+      // Remove debug symbols to reduce package size (but keep if explicitly requested)
+      const dSymPath = path.join(packageFrameworksDir, `${frameworkName}.dSYM`);
+      if (fs.existsSync(dSymPath) && !process.env.KEEP_DSYMS) {
+        fs.rmSync(dSymPath, { recursive: true, force: true });
+        console.log(`   🗑️ Removed debug symbols for ${frameworkName}`);
+      }
+      
     } else {
       console.log(`   ⚠️ ${frameworkName} not found at ${srcPath}`);
     }
+  }
+  
+  // Create a marker file to indicate frameworks are available
+  if (copiedCount > 0) {
+    const markerFile = path.join(packageFrameworksDir, '.frameworks-built');
+    fs.writeFileSync(markerFile, `Built on: ${new Date().toISOString()}\nFrameworks: ${copiedCount}/2\n`);
   }
   
   return copiedCount;
