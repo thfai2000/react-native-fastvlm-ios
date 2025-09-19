@@ -1,4 +1,62 @@
-# Model Download Scripts
+# Scripts Documentation
+
+This directory contains build and setup scripts for the react-native-fastvlm-ios module.
+
+## Available Scripts
+
+### build-ios.js
+
+**Purpose**: Builds iOS frameworks for the React Native module during the npm prepare step.
+
+**Usage**:
+```bash
+node scripts/build-ios.js [options]
+```
+
+**Options**:
+- `--help`, `-h` - Show help message
+- `--check` - Only check if build environment is available
+
+**What it does**:
+1. Checks if running on macOS with Xcode command line tools
+2. If available, builds iOS frameworks using `xcodebuild`
+3. Creates an XCFramework that supports both device and simulator
+4. Copies the built frameworks to `ios/Frameworks/` for npm packaging
+5. If not on macOS or Xcode not available, gracefully skips building
+
+**Build Process**:
+- Builds for iOS Device (arm64)
+- Builds for iOS Simulator (x86_64 and arm64)
+- Creates unified XCFramework
+- Copies to package location for npm distribution
+
+**Environment Requirements**:
+- macOS with Xcode Command Line Tools installed
+- Swift 5.0+ support
+- iOS 13.0+ deployment target
+
+**Integration with npm Scripts**:
+
+The iOS build is integrated into the npm prepare workflow:
+
+```json
+{
+  "scripts": {
+    "clean": "del-cli lib && del-cli ios/build && del-cli ios/Frameworks",
+    "build:js": "bob build",
+    "build:ios": "node scripts/build-ios.js", 
+    "prepare": "npm run build:js && npm run build:ios"
+  }
+}
+```
+
+**Platform Compatibility**:
+
+- **macOS with Xcode**: Full iOS framework building
+- **Other platforms**: JavaScript building only, iOS frameworks skipped gracefully
+- **npm packaging**: Works on all platforms, includes frameworks when built
+
+## Model Download Scripts
 
 This directory contains scripts for downloading FastVLM models automatically during installation.
 

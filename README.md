@@ -103,12 +103,17 @@ This library includes pre-trained FastVLM model files. The model will be automat
 
 To publish this package:
 
-1. Build the library:
+1. **Prerequisites** (for iOS framework building):
+   - macOS with Xcode Command Line Tools
+   - iOS 13.0+ deployment target support
+
+2. **Build the library**:
 ```sh
 npm run prepare
 ```
+This builds both JavaScript/TypeScript files and iOS frameworks. The iOS build will automatically skip on non-macOS platforms.
 
-2. Publish to npm:
+3. **Publish to npm**:
 ```sh
 npm publish --access public
 ```

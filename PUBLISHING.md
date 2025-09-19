@@ -10,11 +10,27 @@
 
 ### 1. Prepare the Library
 
+**Prerequisites for iOS Framework Building:**
+- macOS with Xcode Command Line Tools installed (`xcode-select --install`)
+- iOS 13.0+ deployment target support
+- Swift 5.0+ toolchain
+
+**Build Process:**
 ```sh
 cd FastVLMCamera
-npm run clean
-npm run prepare
+npm run clean        # Clean previous build artifacts
+npm run prepare      # Build both JS/TS and iOS frameworks
 ```
+
+**What `npm run prepare` does:**
+1. **JavaScript/TypeScript Compilation**: Builds the React Native bridge code
+2. **iOS Framework Building**: 
+   - Compiles iOS frameworks using xcodebuild
+   - Creates XCFramework for device + simulator support
+   - Packages frameworks for npm distribution
+   - Gracefully skips on non-macOS platforms
+
+**Note**: The iOS build step will automatically skip if not running on macOS with Xcode, allowing the package to be prepared on any platform for JavaScript-only changes.
 
 ### 2. Test the Build
 

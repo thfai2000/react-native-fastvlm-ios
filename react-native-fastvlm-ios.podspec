@@ -23,4 +23,10 @@ Pod::Spec.new do |s|
   
   # Include model files
   s.resources = ['ios/FastVLM/model/**/*']
+  
+  # Include pre-built frameworks if available (from npm prepare)
+  if File.directory?("ios/Frameworks")
+    s.vendored_frameworks = ['ios/Frameworks/**/*.xcframework']
+    s.preserve_paths = ['ios/Frameworks/**/*']
+  end
 end
