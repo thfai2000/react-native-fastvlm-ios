@@ -30,6 +30,8 @@
     "scripts",
     "!ios/build",
     "!ios/FastVLM/model",
+    "!ios/FastVLM.xcodeproj/xcuserdata",
+    "!ios/FastVLM.xcodeproj/project.xcworkspace/xcuserdata",
     "!android/build",
     "!android/gradle",
     "!android/gradlew",
@@ -47,9 +49,11 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli lib",
     "prepare": "bob build",
+    "prepack": "npm run prepare && node scripts/build-ios.js",
     "release": "release-it --only-version",
     "postinstall": "node scripts/download-model.js --model 0.5b",
-    "download-model": "node scripts/download-model.js"
+    "download-model": "node scripts/download-model.js",
+    "build-ios": "node scripts/build-ios.js"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
