@@ -1,4 +1,47 @@
-# Model Download Scripts
+# Scripts
+
+This directory contains build and model download scripts for the FastVLM iOS library.
+
+## iOS Build Scripts
+
+### build-ios.js
+
+Builds iOS native components (FastVLM.framework, Video.framework, and FastVLM App) for distribution.
+
+```bash
+# Build iOS libraries (macOS with Xcode only)
+npm run build-ios
+
+# Show help
+npm run build-ios -- --help
+
+# Skip building (for testing)
+npm run build-ios -- --skip
+# or
+SKIP_IOS_BUILD=1 npm run build-ios
+```
+
+**Features:**
+- Automatically detects macOS/Xcode availability
+- Builds frameworks in Release configuration
+- Copies built frameworks to package directory
+- Gracefully handles non-macOS environments
+- Integrates with `npm pack` via prepack script
+
+**Build Products:**
+- `FastVLM.framework` - Core FastVLM functionality
+- `Video.framework` - Camera/video processing
+- `FastVLM App.app` - Example application
+
+### test-ios-build.js
+
+Tests the iOS build integration to ensure everything works correctly.
+
+```bash
+node scripts/test-ios-build.js
+```
+
+## Model Download Scripts
 
 This directory contains scripts for downloading FastVLM models automatically during installation.
 

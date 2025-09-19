@@ -108,7 +108,18 @@ To publish this package:
 npm run prepare
 ```
 
-2. Publish to npm:
+2. Build iOS native components (macOS with Xcode only):
+```sh
+npm run build-ios
+```
+
+3. Package with built iOS libraries:
+```sh
+npm pack
+```
+> **Note**: The `npm pack` command will automatically build iOS libraries on macOS systems with Xcode installed via the `prepack` script. On other systems, it will skip iOS building and package source files only.
+
+4. Publish to npm:
 ```sh
 npm publish --access public
 ```
