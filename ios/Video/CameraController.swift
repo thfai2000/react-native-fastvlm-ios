@@ -33,6 +33,7 @@ public class CameraController: NSObject {
 
     private var permissionGranted = true
     private var captureSession: AVCaptureSession?
+    public var publicCaptureSession: AVCaptureSession? { return captureSession }
     private let sessionQueue = DispatchQueue(label: "sessionQueue")
     @objc dynamic private var rotationCoordinator : AVCaptureDevice.RotationCoordinator?
     private var rotationObservation: NSKeyValueObservation?

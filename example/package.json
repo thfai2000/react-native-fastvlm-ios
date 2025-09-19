@@ -15,12 +15,15 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.4",
-    "react-native-fastvlm-ios": "^0.1.0",
+    "react-native-fastvlm-ios": "^0.1.12",
     "react-native-web": "~0.21.0"
   },
   "private": true,
   "devDependencies": {
     "react-native-builder-bob": "^0.40.13",
     "react-native-monorepo-config": "^0.1.9"
-  }
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

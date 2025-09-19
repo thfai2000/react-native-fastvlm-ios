@@ -1340,7 +1340,7 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-  - react-native-fastvlm-ios (0.1.0):
+  - react-native-fastvlm-ios (0.1.12):
     - React-Core
   - React-NativeModulesApple (0.81.4):
     - hermes-engine
@@ -1968,7 +1968,7 @@ SPEC CHECKSUMS:
   React-logger: 7b234de35acb469ce76d6bbb0457f664d6f32f62
   React-Mapbuffer: fbe1da882a187e5898bdf125e1cc6e603d27ecae
   React-microtasksnativemodule: 76905804171d8ccbe69329fc84c57eb7934add7f
-  react-native-fastvlm-ios: 2e39b0190ed00cdc3e35c55ae7514007c7a90a75
+  react-native-fastvlm-ios: ebe12c98e62a04ce64a992e010b823c427a821c4
   React-NativeModulesApple: a9464983ccc0f66f45e93558671f60fc7536e438
   React-oscompat: 73db7dbc80edef36a9d6ed3c6c4e1724ead4236d
   React-perflogger: 123272debf907cc423962adafcf4513320e43757

@@ -19,9 +19,9 @@ const ComponentName = 'FastVLMCameraView';
 
 export const CameraPreview = requireNativeComponent<CameraPreviewProps>(ComponentName);
 
-export async function analyzeCameraData(cameraData: string, prompt: string): Promise<string> {
+export async function analyzeCameraData(prompt: string): Promise<string> {
   if (Platform.OS !== 'ios') throw new Error('iOS only');
   const { FastVLMCameraModule } = NativeModules;
   if (!FastVLMCameraModule) throw new Error(LINKING_ERROR);
-  return FastVLMCameraModule.analyzeCameraData(cameraData, prompt);
+  return FastVLMCameraModule.analyzeCameraData(prompt);
 }
