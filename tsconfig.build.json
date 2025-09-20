@@ -1,4 +1,11 @@
 {
   "extends": "./tsconfig",
-  "exclude": ["example", "lib", "test-app"]
+  "exclude": [
+    "example-app",
+    "example-app/**",
+    "lib",
+    "node_modules",
+    "ios",
+    "android"
+  ]
 }

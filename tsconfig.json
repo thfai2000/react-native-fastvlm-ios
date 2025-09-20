@@ -28,8 +28,7 @@
     "verbatimModuleSyntax": true
   },
   "exclude": [
-    "test-app",
-    "example/node_modules",
+    "example-app",
     "lib"
   ]
 }

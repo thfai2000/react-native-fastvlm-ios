@@ -4,6 +4,8 @@ import AVFoundation
 import SwiftUI
 import CoreImage
 import Vision
+import FastVLM
+import Video
 
 // Shared camera manager for coordination between preview and analysis
 class SharedCameraManager: ObservableObject {

@@ -11,29 +11,64 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => "18.0" }
-  s.source       = { :git => "https://github.com/thfai2000/fastvlm-camera-swift.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/thfai2000/react-native-fastvlm-ios.git", :tag => "#{s.version}" }
 
-  # Include only necessary files for the React Native library
+  # We use a pre-compile step to build the binary frameworks for the FastVLM
+  # components (so consumers don't have to compile them and their heavy SPM
+  # dependencies during pod install). The precompile script (below) will
+  # produce frameworks into `ios/compiled/`.
+  # Keep model package files as source resources.
   s.source_files = [
-    "ios/*.{h,m,mm,swift}",
-    "ios/FastVLM/**/*.{h,m,mm,swift}",
-    "ios/Video/**/*.{h,m,mm,swift}",
-    "ios/FastVLM App/FastVLMModel.swift",
-    'ios/FastVLM/model/fastvithd.mlpackage',
-    # include compiled .mlmodel sources (prepared at pod install time)
-    'ios/FastVLM/model/compiled/*.mlmodel'
+    'ios/*.{h,m,mm,swift}'
   ]
-  # Exclude UI files that aren't needed for the React Native library
-  s.exclude_files = [
-    "ios/FastVLM App/ContentView.swift",
-    "ios/FastVLM App/FastVLMApp.swift", 
-    "ios/FastVLM App/InfoView.swift"
+
+  # Vendored XCFrameworks produced by the precompile step. The precompile
+  # script now builds device + simulator slices and bundles them into
+  # `.xcframework` bundles which CocoaPods will integrate correctly for
+  # iOS targets.
+  s.vendored_frameworks = [
+    'ios/compiled/FastVLM.framework',
+    'ios/compiled/Video.framework'
   ]
+
+  # Run the precompile script during `pod install` so the frameworks exist
+  # before the Pod is integrated. Consumers can also run the script locally.
+  s.prepare_command = <<-CMD
+    set -e
+    echo "Running prepare_command in react-native-fastvlm-ios podspec"
+    pwd
+    # Only download the pretrained model if the destination folder is empty
+    if [ -z "$(ls -A ./ios/FastVLM/model 2>/dev/null)" ]; then
+      echo "model folder empty — downloading pretrained MLX model"
+      sh ./scripts/get_pretrained_mlx_model.sh --model 0.5b --dest ./ios/FastVLM/model
+    else
+      echo "model folder not empty — skipping pretrained model download"
+    fi
+
+    sh ./scripts/precompile_fastvlm.sh
+  CMD
 
   s.dependency "React-Core"
   
+  # Swift specific configurations
+  s.swift_version = "5.0"
+  
+  # Build optimizations to speed up MLX Swift package compilation
+  s.compiler_flags = '-DSWIFT_PACKAGE=1'
+  
+  # System frameworks
+  s.frameworks = 'AVFoundation', 'CoreImage', 'CoreML', 'Vision', 'SwiftUI', 'UIKit'
+
+    
   # Swift Package Manager dependencies for MLX frameworks
   if defined?(:spm_dependency)
+
+    spm_dependency(s,
+      url: 'https://github.com/1024jp/GzipSwift',
+      requirement: {kind: 'exactVersion', version: '6.0.1'},
+      products: ['Gzip']
+    )
+
     spm_dependency(s,
       url: 'https://github.com/ml-explore/mlx-swift',
       requirement: {kind: 'exactVersion', version: '0.25.6'},
@@ -43,13 +78,31 @@ Pod::Spec.new do |s|
     spm_dependency(s,
       url: 'https://github.com/ml-explore/mlx-swift-examples',
       requirement: {kind: 'exactVersion', version: '2.25.7'},
-      products: ['MLXLMCommon', 'MLXVLM']
+      products: ['MLXLMCommon', 'MLXVLM', 'MLXLLM', 'MLXEmbedders']
+    )
+
+    spm_dependency(s,
+      url: 'https://github.com/apple/swift-numerics',
+      requirement: {kind: 'exactVersion', version: '1.1.0'},
+      products: ['Numerics']
     )
     
     spm_dependency(s,
       url: 'https://github.com/huggingface/swift-transformers',
       requirement: {kind: 'exactVersion', version: '0.1.24'},
       products: ['Transformers']
+    )
+
+    spm_dependency(s,
+      url: 'https://github.com/apple/swift-collections',
+      requirement: {kind: 'exactVersion', version: '1.2.1'},
+      products: ['Collections']
+    )
+
+    spm_dependency(s,
+      url: 'https://github.com/apple/swift-argument-parser',
+      requirement: {kind: 'exactVersion', version: '1.3.0'},
+      products: ['ArgumentParser']
     )
     
     spm_dependency(s,
@@ -60,80 +113,6 @@ Pod::Spec.new do |s|
   else
     raise "Please upgrade React Native to >=0.75.0 to use SPM dependencies in react-native-fastvlm-ios."
   end
+
   
-  # Swift specific configurations
-  s.swift_version = "5.0"
-  
-  # Build optimizations to speed up MLX Swift package compilation
-  s.compiler_flags = '-DSWIFT_PACKAGE=1'
-  s.pod_target_xcconfig = {
-    'SWIFT_OPTIMIZATION_LEVEL' => '-O',
-    'SWIFT_COMPILATION_MODE' => 'wholemodule',
-    'BUILD_LIBRARY_FOR_DISTRIBUTION' => 'YES',
-    'ENABLE_LIBRARY_EVOLUTION' => 'YES',
-    'SWIFT_SERIALIZE_DEBUGGING_OPTIONS' => 'NO',
-    'SWIFT_ENABLE_BATCH_MODE' => 'YES',
-    'SWIFT_WHOLE_MODULE_OPTIMIZATION' => 'YES',
-    'GCC_OPTIMIZATION_LEVEL' => '3',
-    'ENABLE_NS_ASSERTIONS' => 'NO',
-    'VALIDATE_PRODUCT' => 'NO',
-    'MTL_ENABLE_DEBUG_INFO' => 'NO',
-    'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => 'SWIFT_PACKAGE',
-    # Reduce build parallelism to avoid memory issues
-    'SWIFT_EXEC' => '$(TOOLCHAIN_DIR)/usr/bin/swiftc',
-    'OTHER_SWIFT_FLAGS' => '-j4'
-  }
-  
-  # System frameworks
-  s.frameworks = 'AVFoundation', 'CoreImage', 'CoreML', 'Vision'
-
-  # Prepare command: pre-compile/extract any .mlpackage into a .mlmodel so CocoaPods will add it as a source file.
-  # This runs during `pod install` and ensures Xcode sees the .mlmodel in the project sources (so it can generate the Swift model class).
-  s.prepare_command = <<-RUBY
-    echo "Preparing CoreML models for react-native-fastvlm-ios..."
-    set -e
-    PODSPEC_DIR="#{File.dirname(__FILE__)}"
-    MODEL_DIR="$PODSPEC_DIR/ios/FastVLM/model"
-    COMPILED_DIR="$MODEL_DIR/compiled"
-    mkdir -p "$COMPILED_DIR"
-
-    # For each .mlpackage, try to extract any .mlmodel inside. If none is found, try to compile with xcrun coremlcompiler as a best-effort fallback.
-    find "$MODEL_DIR" -type d -name "*.mlpackage" | while read -r pkg; do
-      echo "Processing package: $pkg"
-      # look for a .mlmodel inside the package
-      mlmodel=$(find "$pkg" -type f -name "*.mlmodel" -print -quit || true)
-      if [ -n "$mlmodel" ]; then
-        echo "Found .mlmodel inside package: $mlmodel"
-        cp -f "$mlmodel" "$COMPILED_DIR/$(basename "$mlmodel")"
-      else
-        if command -v xcrun >/dev/null 2>&1; then
-          tmpout=$(mktemp -d)
-          echo "No .mlmodel found; attempting to compile package to compiled modelc: $pkg -> $tmpout"
-          xcrun coremlcompiler compile "$pkg" "$tmpout" || true
-          # try to locate any .mlmodel produced (some toolchains may emit one), otherwise copy the .mlmodelc as a resource fallback
-          found=$(find "$tmpout" -type f -name "*.mlmodel" -print -quit || true)
-          if [ -n "$found" ]; then
-            cp -f "$found" "$COMPILED_DIR/$(basename "$found")"
-          else
-            # fallback: copy the compiled .mlmodelc directory into compiled to be included as a resource by the Pod
-            # CocoaPods treats .mlmodelc as resources rather than sources; we'll copy into compiled to keep artifacts grouped
-            if find "$tmpout" -type d -name "*.mlmodelc" | grep -q .; then
-              for d in $(find "$tmpout" -type d -name "*.mlmodelc"); do
-                dest="$COMPILED_DIR/$(basename "$d")"
-                rm -rf "$dest"
-                cp -R "$d" "$dest"
-              done
-            else
-              echo "warning: no .mlmodel or .mlmodelc produced for $pkg"
-            fi
-          fi
-          rm -rf "$tmpout"
-        else
-          echo "warning: xcrun not found; cannot compile $pkg"
-        fi
-      fi
-    done
-  RUBY
-
-
 end

@@ -1,6 +1,6 @@
 {
   "name": "react-native-fastvlm-ios",
-  "version": "0.1.13",
+  "version": "0.1.15",
   "description": "React Native library for FastVLM camera integration on iOS - AI-powered visual language model for real-time camera analysis",
   "keywords": [
     "react-native",
@@ -14,10 +14,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/thfai2000/fastvlm-camera-swift.git"
+    "url": "https://github.com/thfai2000/react-native-fastvlm-ios.git"
   },
   "author": "thfai2000",
-  "homepage": "https://github.com/thfai2000/fastvlm-camera-swift#readme",
+  "homepage": "https://github.com/thfai2000/react-native-fastvlm-ios#readme",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
@@ -49,20 +49,16 @@
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",
-    "!**/.*"
+    "!**/.*",
+    "!example-app"
   ],
   "scripts": {
-    "example": "yarn workspace react-native-fastvlm-ios-example",
     "test": "jest",
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli lib",
     "prepare": "bob build",
-    "release": "release-it --only-version",
-    "postinstall": "node scripts/download-model.js --model 0.5b",
-    "download-model": "node scripts/download-model.js",
-    "android": "expo run:android",
-    "ios": "expo run:ios"
+    "release": "release-it --only-version"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -95,9 +91,6 @@
     "react": "*",
     "react-native": "*"
   },
-  "workspaces": [
-    "example"
-  ],
   "packageManager": "yarn@3.6.1",
   "jest": {
     "preset": "react-native",
