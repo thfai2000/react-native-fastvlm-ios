@@ -1,6 +1,6 @@
 {
   "name": "react-native-fastvlm-ios",
-  "version": "0.1.16",
+  "version": "0.1.19",
   "main": "./lib/module/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,7 +16,7 @@
     "url": "https://github.com/thfai2000/react-native-fastvlm-ios/issues"
   },
   "homepage": "https://github.com/thfai2000/react-native-fastvlm-ios#readme",
-  "description": "",
+  "description": "It is a React Native wrapper for the FastVLM (iOS only), enabling seamless integration of advanced vision-language model capabilities into your React Native applications.",
   "devDependencies": {
     "react-native-builder-bob": "^0.40.13"
   },
@@ -29,13 +29,21 @@
     "./package.json": "./package.json"
   },
   "types": "./lib/typescript/src/index.d.ts",
+  "react-native": "src/index",
+  "source": "src/index",
   "files": [
     "scripts",
     "src",
     "lib",
+    "ios",
+    "!**/build",
+    "!**/compiled",
+    "!**/model",
+    "react-native-fastvlm-ios.podspec",
     "!**/__tests__",
     "!**/__fixtures__",
-    "!**/__mocks__"
+    "!**/__mocks__",
+    "!example-app"
   ],
   "react-native-builder-bob": {
     "source": "src",

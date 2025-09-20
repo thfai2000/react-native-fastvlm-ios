@@ -7,8 +7,7 @@
 
 @interface RCT_EXTERN_MODULE(FastVLMCameraModule, NSObject)
 
-RCT_EXTERN_METHOD(analyzeCameraData:(NSString *)cameraData
-                 withPrompt:(NSString *)prompt
+RCT_EXTERN_METHOD(analyzeCameraData:(NSString *)prompt
                  withResolver:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 

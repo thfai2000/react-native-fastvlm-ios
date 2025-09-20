@@ -24,4 +24,8 @@
     "target": "ESNext",
     "verbatimModuleSyntax": true
   }
+  ,
+  "exclude": [
+    "example-app"
+  ]
 }
