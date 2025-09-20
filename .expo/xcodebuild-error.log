@@ -1,0 +1,11 @@
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:iOS Simulator, arch:arm64, id:5DC71D47-0A17-43F8-8F03-45069B17A7DE, OS:26.0, name:iPad Pro 11-inch (M4) }
+{ platform:iOS Simulator, arch:x86_64, id:5DC71D47-0A17-43F8-8F03-45069B17A7DE, OS:26.0, name:iPad Pro 11-inch (M4) }
+** BUILD FAILED **
+
+
+The following build commands failed:
+	EmitSwiftModule normal arm64 (in target 'FastVLM' from project 'FastVLM')
+	SwiftEmitModule normal arm64 Emitting\ module\ for\ FastVLM (in target 'FastVLM' from project 'FastVLM')
+	Building project FastVLM with scheme FastVLM App and configuration Debug
+(3 failures)

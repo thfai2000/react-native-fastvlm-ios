@@ -1,0 +1,9 @@
+{
+  "android": {
+    "package": "com.thfai2000.reactnativefastvlmios"
+  },
+  "ios": {
+    "bundleIdentifier": "com.thfai2000.reactnativefastvlmios",
+    "deploymentTarget": "18.0"
+  }
+}

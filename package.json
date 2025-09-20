@@ -1,8 +1,17 @@
 {
   "name": "react-native-fastvlm-ios",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "React Native library for FastVLM camera integration on iOS - AI-powered visual language model for real-time camera analysis",
-  "keywords": ["react-native", "ios", "camera", "ai", "vlm", "vision", "machine-learning", "coreml"],
+  "keywords": [
+    "react-native",
+    "ios",
+    "camera",
+    "ai",
+    "vlm",
+    "vision",
+    "machine-learning",
+    "coreml"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/thfai2000/fastvlm-camera-swift.git"
@@ -51,7 +60,9 @@
     "prepare": "bob build",
     "release": "release-it --only-version",
     "postinstall": "node scripts/download-model.js --model 0.5b",
-    "download-model": "node scripts/download-model.js"
+    "download-model": "node scripts/download-model.js",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -149,5 +160,10 @@
     "languages": "js",
     "type": "library",
     "version": "0.54.3"
+  },
+  "dependencies": {
+    "expo": "~54.0.8",
+    "react": "19.1.0",
+    "react-native": "0.81.4"
   }
 }

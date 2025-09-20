@@ -48,5 +48,37 @@ target 'example' do
       :mac_catalyst_enabled => false,
       :ccache_enabled => podfile_properties['apple.ccacheEnabled'] == 'true',
     )
+    
+    # Optimize MLX Swift package compilation
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        # General optimizations for all targets
+        config.build_settings['GCC_OPTIMIZATION_LEVEL'] = '3'
+        config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-O'
+        config.build_settings['ENABLE_NS_ASSERTIONS'] = 'NO'
+        config.build_settings['VALIDATE_PRODUCT'] = 'NO'
+        config.build_settings['MTL_ENABLE_DEBUG_INFO'] = 'NO'
+        
+        # MLX-specific optimizations
+        if target.name.include?('MLX') || target.name.include?('mlx-swift') || target.name.include?('swift-transformers')
+          config.build_settings['SWIFT_COMPILATION_MODE'] = 'wholemodule'
+          config.build_settings['SWIFT_WHOLE_MODULE_OPTIMIZATION'] = 'YES'
+          config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+          config.build_settings['ENABLE_LIBRARY_EVOLUTION'] = 'YES'
+          config.build_settings['SWIFT_SERIALIZE_DEBUGGING_OPTIONS'] = 'NO'
+          config.build_settings['SWIFT_ENABLE_BATCH_MODE'] = 'YES'
+          config.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -j4 -enable-library-evolution'
+          
+          # Reduce memory usage during compilation
+          config.build_settings['SWIFT_EXEC'] = '$(TOOLCHAIN_DIR)/usr/bin/swiftc'
+          
+          # Disable debug info for release builds to speed up compilation
+          if config.name == 'Release'
+            config.build_settings['DEBUG_INFORMATION_FORMAT'] = 'dwarf'
+            config.build_settings['SWIFT_DEBUG_INFORMATION_FORMAT'] = 'line-tables-only'
+          end
+        end
+      end
+    end
   end
 end

@@ -15,7 +15,8 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "fastvlmios.example",
-      "appleTeamId": "429TY5YHK3"
+      "appleTeamId": "429TY5YHK3",
+      "deploymentTarget": "18.0"
     },
     "android": {
       "adaptiveIcon": {
