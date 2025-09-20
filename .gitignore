@@ -1,7 +1,5 @@
-ios/FastVLM/model
+node_modules
+*.tgz
 ios/build
 ios/compiled
-node_modules
-example-app/node_modules
-example-app/.expo
-*.tgz
+ios/FastVLM/model
