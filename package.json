@@ -1,10 +1,11 @@
 {
   "name": "react-native-fastvlm-ios",
-  "version": "0.1.19",
+  "version": "0.1.24",
   "main": "./lib/module/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "bob build"
+    "prepare": "bob build",
+    "retry": "npm version patch; npm run prepare; npm pack; npm publish"
   },
   "repository": {
     "type": "git",
@@ -64,6 +65,7 @@
   ],
   "dependencies": {
     "react-native": "^0.81.4",
+    "react-native-fastvlm-ios": "^0.1.21",
     "typescript": "^5.9.2"
   }
 }

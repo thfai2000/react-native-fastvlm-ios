@@ -4,8 +4,8 @@ import AVFoundation
 import SwiftUI
 import CoreImage
 import Vision
-import FastVLM
-import Video
+// import MLXVLM
+import MLXLMCommon
 
 // Shared camera manager for coordination between preview and analysis
 class SharedCameraManager: ObservableObject {
@@ -126,7 +126,7 @@ class FastVLMCameraModule: NSObject, RCTBridgeModule {
         let task = await fastVLMModel.generate(userInput)
         _ = await task.result
         
-        let result = fastVLMModel.output
+        let result = await fastVLMModel.output
         DispatchQueue.main.async {
           resolve(result)
         }

@@ -18,18 +18,29 @@ Pod::Spec.new do |s|
   # dependencies during pod install). The precompile script (below) will
   # produce frameworks into `ios/compiled/`.
   # Keep model package files as source resources.
+  # Include package source files in ios/ but exclude any SPM checkouts or
+  # derived build products that may exist during local development. Those
+  # artifacts (found under ios/compiled or ios/**/SourcePackages) can lead
+  # to duplicate-file conflicts when multiple pods embed the same SPM
+  # packages. Keep model files as resources, not source files.
   s.source_files = [
-    'ios/*.{h,m,mm,swift}'
+    'ios/*.{h,m,mm,swift}',
+    # 'ios/**/*.{h,m,mm,swift,mlmodelc,bin,txt,json,mlmodel,mlpackage}'
   ]
+
+
+  s.resource_bundles = {
+    'fastvithd' => ['ios/FastVLM/model/fastvithd.mlmodelc']
+  }
 
   # Vendored XCFrameworks produced by the precompile step. The precompile
   # script now builds device + simulator slices and bundles them into
   # `.xcframework` bundles which CocoaPods will integrate correctly for
   # iOS targets.
-  s.vendored_frameworks = [
-    'ios/compiled/FastVLM.framework',
-    'ios/compiled/Video.framework'
-  ]
+  # s.vendored_frameworks = [
+  #   'ios/compiled/FastVLM.framework',
+  #   'ios/compiled/Video.framework'
+  # ]
 
   # Run the precompile script during `pod install` so the frameworks exist
   # before the Pod is integrated. Consumers can also run the script locally.
@@ -45,8 +56,18 @@ Pod::Spec.new do |s|
       echo "model folder not empty — skipping pretrained model download"
     fi
 
-    sh ./scripts/precompile_fastvlm.sh
+    # xcrun coremlcompiler compile ./ios/FastVLM/model/fastvithd.mlpackage ./ios/FastVLM/model/
+
+    # sh ./scripts/precompile_fastvlm.sh
   CMD
+
+
+  s.pod_target_xcconfig = {
+    'DEFINES_MODULE' => 'YES',
+    'SWIFT_INSTALL_OBJC_HEADER' => 'NO', # ← Important if mixing Swift/Obj-C
+    'APPLICATION_EXTENSION_API_ONLY' => 'NO',
+    'CLANG_ENABLE_MODULES' => 'YES'
+  }
 
   s.dependency "React-Core"
   
@@ -101,7 +122,7 @@ Pod::Spec.new do |s|
 
     spm_dependency(s,
       url: 'https://github.com/apple/swift-argument-parser',
-      requirement: {kind: 'exactVersion', version: '1.3.0'},
+      requirement: {kind: 'exactVersion', version: '1.4.0'},
       products: ['ArgumentParser']
     )
     

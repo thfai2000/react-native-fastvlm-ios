@@ -8,11 +8,11 @@ import Foundation
 import MLX
 import MLXLMCommon
 import MLXRandom
-import MLXVLM
+// import MLXVLM
 
 @Observable
 @MainActor
-class FastVLMModel {
+public class FastVLMModel {
 
     public var running = false
     public var modelInfo = ""
@@ -38,7 +38,7 @@ class FastVLMModel {
     private var loadState = LoadState.idle
     private var currentTask: Task<Void, Never>?
 
-    enum EvaluationState: String, CaseIterable {
+    public enum EvaluationState: String, CaseIterable {
         case idle = "Idle"
         case processingPrompt = "Processing Prompt"
         case generatingResponse = "Generating Response"
