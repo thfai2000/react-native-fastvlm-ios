@@ -8,7 +8,7 @@ import Foundation
 import MLX
 import MLXLMCommon
 import MLXRandom
-// import MLXVLM
+import MLXVLM
 
 @Observable
 @MainActor

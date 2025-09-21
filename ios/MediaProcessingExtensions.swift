@@ -7,7 +7,7 @@ import Accelerate
 import CoreImage
 import MLX
 import MLXLMCommon
-// import MLXVLM
+import MLXVLM
 
 /// Additions to MediaProcessing -- not currently present in mlx-libraries
 enum MediaProcessingExtensions {

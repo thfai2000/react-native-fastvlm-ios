@@ -4,7 +4,7 @@ import AVFoundation
 import SwiftUI
 import CoreImage
 import Vision
-// import MLXVLM
+import MLXVLM
 import MLXLMCommon
 
 // Shared camera manager for coordination between preview and analysis

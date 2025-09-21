@@ -10,7 +10,7 @@ import MLX
 import MLXFast
 import MLXLMCommon
 import MLXNN
-// import MLXVLM
+import MLXVLM
 import Tokenizers
 
 // FastVLM is Qwen2VL with a custom vision tower.
