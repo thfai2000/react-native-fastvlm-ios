@@ -27,8 +27,8 @@ Pod::Spec.new do |s|
   # `.xcframework` bundles which CocoaPods will integrate correctly for
   # iOS targets.
   s.vendored_frameworks = [
-    'ios/compiled/FastVLM.framework',
-    'ios/compiled/Video.framework'
+    'ios/build/FastVLM.xcframework',
+    'ios/build/Video.xcframework'
   ]
 
   # Run the precompile script during `pod install` so the frameworks exist
@@ -45,7 +45,7 @@ Pod::Spec.new do |s|
       echo "model folder not empty — skipping pretrained model download"
     fi
 
-    sh ./scripts/precompile_fastvlm.sh
+    # sh ./scripts/precompile_fastvlm.sh
   CMD
 
   s.dependency "React-Core"
@@ -60,59 +60,59 @@ Pod::Spec.new do |s|
   s.frameworks = 'AVFoundation', 'CoreImage', 'CoreML', 'Vision', 'SwiftUI', 'UIKit'
 
     
-  # Swift Package Manager dependencies for MLX frameworks
-  if defined?(:spm_dependency)
+  # # Swift Package Manager dependencies for MLX frameworks
+  # if defined?(:spm_dependency)
 
-    spm_dependency(s,
-      url: 'https://github.com/1024jp/GzipSwift',
-      requirement: {kind: 'exactVersion', version: '6.0.1'},
-      products: ['Gzip']
-    )
+  #   spm_dependency(s,
+  #     url: 'https://github.com/1024jp/GzipSwift',
+  #     requirement: {kind: 'exactVersion', version: '6.0.1'},
+  #     products: ['Gzip']
+  #   )
 
-    spm_dependency(s,
-      url: 'https://github.com/ml-explore/mlx-swift',
-      requirement: {kind: 'exactVersion', version: '0.25.6'},
-      products: ['MLX', 'MLXFast', 'MLXNN', 'MLXRandom']
-    )
+  #   spm_dependency(s,
+  #     url: 'https://github.com/ml-explore/mlx-swift',
+  #     requirement: {kind: 'exactVersion', version: '0.25.6'},
+  #     products: ['MLX', 'MLXFast', 'MLXNN', 'MLXRandom']
+  #   )
     
-    spm_dependency(s,
-      url: 'https://github.com/ml-explore/mlx-swift-examples',
-      requirement: {kind: 'exactVersion', version: '2.25.7'},
-      products: ['MLXLMCommon', 'MLXVLM', 'MLXLLM', 'MLXEmbedders']
-    )
+  #   spm_dependency(s,
+  #     url: 'https://github.com/ml-explore/mlx-swift-examples',
+  #     requirement: {kind: 'exactVersion', version: '2.25.7'},
+  #     products: ['MLXLMCommon', 'MLXVLM', 'MLXLLM', 'MLXEmbedders']
+  #   )
 
-    spm_dependency(s,
-      url: 'https://github.com/apple/swift-numerics',
-      requirement: {kind: 'exactVersion', version: '1.1.0'},
-      products: ['Numerics']
-    )
+  #   spm_dependency(s,
+  #     url: 'https://github.com/apple/swift-numerics',
+  #     requirement: {kind: 'exactVersion', version: '1.1.0'},
+  #     products: ['Numerics']
+  #   )
     
-    spm_dependency(s,
-      url: 'https://github.com/huggingface/swift-transformers',
-      requirement: {kind: 'exactVersion', version: '0.1.24'},
-      products: ['Transformers']
-    )
+  #   spm_dependency(s,
+  #     url: 'https://github.com/huggingface/swift-transformers',
+  #     requirement: {kind: 'exactVersion', version: '0.1.24'},
+  #     products: ['Transformers']
+  #   )
 
-    spm_dependency(s,
-      url: 'https://github.com/apple/swift-collections',
-      requirement: {kind: 'exactVersion', version: '1.2.1'},
-      products: ['Collections']
-    )
+  #   spm_dependency(s,
+  #     url: 'https://github.com/apple/swift-collections',
+  #     requirement: {kind: 'exactVersion', version: '1.2.1'},
+  #     products: ['Collections']
+  #   )
 
-    spm_dependency(s,
-      url: 'https://github.com/apple/swift-argument-parser',
-      requirement: {kind: 'exactVersion', version: '1.3.0'},
-      products: ['ArgumentParser']
-    )
+  #   spm_dependency(s,
+  #     url: 'https://github.com/apple/swift-argument-parser',
+  #     requirement: {kind: 'exactVersion', version: '1.3.0'},
+  #     products: ['ArgumentParser']
+  #   )
     
-    spm_dependency(s,
-      url: 'https://github.com/maiqingqiang/Jinja',
-      requirement: {kind: 'exactVersion', version: '1.3.0'},
-      products: ['Jinja']
-    )
-  else
-    raise "Please upgrade React Native to >=0.75.0 to use SPM dependencies in react-native-fastvlm-ios."
-  end
+  #   spm_dependency(s,
+  #     url: 'https://github.com/maiqingqiang/Jinja',
+  #     requirement: {kind: 'exactVersion', version: '1.3.0'},
+  #     products: ['Jinja']
+  #   )
+  # else
+  #   raise "Please upgrade React Native to >=0.75.0 to use SPM dependencies in react-native-fastvlm-ios."
+  # end
 
   
 end
