@@ -3,3 +3,4 @@ node_modules
 ios/build
 ios/compiled
 ios/FastVLM/model
+temp_spm_builds

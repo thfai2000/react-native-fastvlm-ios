@@ -33,14 +33,25 @@ Pod::Spec.new do |s|
     'fastvithd' => ['ios/FastVLM/model/fastvithd.mlmodelc']
   }
 
-  # Vendored XCFrameworks produced by the precompile step. The precompile
-  # script now builds device + simulator slices and bundles them into
-  # `.xcframework` bundles which CocoaPods will integrate correctly for
-  # iOS targets.
-  # s.vendored_frameworks = [
-  #   'ios/compiled/FastVLM.framework',
-  #   'ios/compiled/Video.framework'
-  # ]
+  # Vendored XCFrameworks produced by the build script. The build script
+  # creates XCFrameworks from Swift Package Manager dependencies using
+  # swift-create-xcframework tool.
+  s.vendored_frameworks = [
+    'ios/xcframeworks/Gzip.xcframework',
+    'ios/xcframeworks/MLX.xcframework',
+    'ios/xcframeworks/MLXFast.xcframework',
+    'ios/xcframeworks/MLXNN.xcframework',
+    'ios/xcframeworks/MLXRandom.xcframework',
+    'ios/xcframeworks/MLXLMCommon.xcframework',
+    'ios/xcframeworks/MLXVLM.xcframework',
+    'ios/xcframeworks/MLXLLM.xcframework',
+    'ios/xcframeworks/MLXEmbedders.xcframework',
+    'ios/xcframeworks/Numerics.xcframework',
+    'ios/xcframeworks/Transformers.xcframework',
+    'ios/xcframeworks/Collections.xcframework',
+    'ios/xcframeworks/ArgumentParser.xcframework',
+    'ios/xcframeworks/Jinja.xcframework'
+  ]
 
   # Run the precompile script during `pod install` so the frameworks exist
   # before the Pod is integrated. Consumers can also run the script locally.
@@ -56,9 +67,9 @@ Pod::Spec.new do |s|
       echo "model folder not empty — skipping pretrained model download"
     fi
 
-    # xcrun coremlcompiler compile ./ios/FastVLM/model/fastvithd.mlpackage ./ios/FastVLM/model/
-
-    # sh ./scripts/precompile_fastvlm.sh
+    # Build XCFrameworks from SPM dependencies
+    echo "Building XCFrameworks from SPM dependencies..."
+    bash ./scripts/build_spm_xcframeworks.sh
   CMD
 
 
@@ -79,61 +90,6 @@ Pod::Spec.new do |s|
   
   # System frameworks
   s.frameworks = 'AVFoundation', 'CoreImage', 'CoreML', 'Vision', 'SwiftUI', 'UIKit'
-
-    
-  # Swift Package Manager dependencies for MLX frameworks
-  if defined?(:spm_dependency)
-
-    spm_dependency(s,
-      url: 'https://github.com/1024jp/GzipSwift',
-      requirement: {kind: 'exactVersion', version: '6.0.1'},
-      products: ['Gzip']
-    )
-
-    spm_dependency(s,
-      url: 'https://github.com/ml-explore/mlx-swift',
-      requirement: {kind: 'exactVersion', version: '0.25.6'},
-      products: ['MLX', 'MLXFast', 'MLXNN', 'MLXRandom']
-    )
-    
-    spm_dependency(s,
-      url: 'https://github.com/ml-explore/mlx-swift-examples',
-      requirement: {kind: 'exactVersion', version: '2.25.7'},
-      products: ['MLXLMCommon', 'MLXVLM', 'MLXLLM', 'MLXEmbedders']
-    )
-
-    spm_dependency(s,
-      url: 'https://github.com/apple/swift-numerics',
-      requirement: {kind: 'exactVersion', version: '1.1.0'},
-      products: ['Numerics']
-    )
-    
-    spm_dependency(s,
-      url: 'https://github.com/huggingface/swift-transformers',
-      requirement: {kind: 'exactVersion', version: '0.1.24'},
-      products: ['Transformers']
-    )
-
-    spm_dependency(s,
-      url: 'https://github.com/apple/swift-collections',
-      requirement: {kind: 'exactVersion', version: '1.2.1'},
-      products: ['Collections']
-    )
-
-    spm_dependency(s,
-      url: 'https://github.com/apple/swift-argument-parser',
-      requirement: {kind: 'exactVersion', version: '1.4.0'},
-      products: ['ArgumentParser']
-    )
-    
-    spm_dependency(s,
-      url: 'https://github.com/maiqingqiang/Jinja',
-      requirement: {kind: 'exactVersion', version: '1.3.0'},
-      products: ['Jinja']
-    )
-  else
-    raise "Please upgrade React Native to >=0.75.0 to use SPM dependencies in react-native-fastvlm-ios."
-  end
 
   
 end
