@@ -9,7 +9,7 @@
     "ios": "expo run:ios --device",
     "web": "expo start --web",
     "lint": "expo lint",
-    "retry": "npx expo prebuild; cd ios; pod install --repo-update; cd ..; npx expo run:ios --device"
+    "retry": "npx expo prebuild; npx expo run:ios --device"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
@@ -31,7 +31,6 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.4",
-  "react-native-fastvlm-ios": "file:..",
     "react-native-gesture-handler": "~2.28.0",
     "react-native-reanimated": "~4.1.0",
     "react-native-safe-area-context": "~5.6.0",

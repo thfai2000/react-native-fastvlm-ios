@@ -30,8 +30,6 @@
     "./package.json": "./package.json"
   },
   "types": "./lib/typescript/src/index.d.ts",
-  "react-native": "src/index",
-  "source": "src/index",
   "files": [
     "scripts",
     "src",

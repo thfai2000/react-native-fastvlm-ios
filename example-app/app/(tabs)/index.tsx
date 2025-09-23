@@ -1,98 +1,151 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { Platform, StyleSheet, View, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { CameraPreview, analyzeCameraData } from 'react-native-fastvlm-ios';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const [analysisResult, setAnalysisResult] = useState<string>('');
+  const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
+  const [prompt, setPrompt] = useState<string>('What do you see in this image?');
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
+  const handleAnalyzePress = async () => {
+    if (Platform.OS !== 'ios') {
+      Alert.alert('Error', 'This feature is only available on iOS');
+      return;
+    }
+
+    try {
+      setIsAnalyzing(true);
+      setAnalysisResult('Analyzing...');
+      const result = await analyzeCameraData(prompt);
+      setAnalysisResult(result);
+    } catch (error) {
+      console.error('Analysis error:', error);
+      setAnalysisResult(`Error: ${error instanceof Error ? error.message : 'Unknown error occurred'}`);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  return (
+    <ThemedView style={styles.container}>
+      <ThemedView style={styles.titleContainer}>
+        <ThemedText type="title">FastVLM Camera Demo</ThemedText>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
+      
+      <ThemedView style={styles.cameraContainer}>
+        <CameraPreview style={styles.cameraPreview} />
       </ThemedView>
-    </ParallaxScrollView>
+
+      <ThemedView style={styles.controlsContainer}>
+        <ThemedText type="subtitle">Analysis Prompt:</ThemedText>
+        <TextInput
+          style={styles.promptInput}
+          value={prompt}
+          onChangeText={setPrompt}
+          placeholder="Enter your prompt here..."
+          multiline
+          numberOfLines={2}
+        />
+        
+        <TouchableOpacity
+          style={[styles.analyzeButton, isAnalyzing && styles.analyzeButtonDisabled]}
+          onPress={handleAnalyzePress}
+          disabled={isAnalyzing}
+        >
+          <ThemedText style={styles.buttonText}>
+            {isAnalyzing ? 'Analyzing...' : 'Analyze Current Screen'}
+          </ThemedText>
+        </TouchableOpacity>
+      </ThemedView>
+
+      <ThemedView style={styles.resultContainer}>
+        <ThemedText type="subtitle">Analysis Result:</ThemedText>
+        <ScrollView style={styles.resultScrollView}>
+          <TextInput
+            style={styles.resultTextArea}
+            value={analysisResult}
+            onChangeText={setAnalysisResult}
+            placeholder="Analysis results will appear here..."
+            multiline
+            textAlignVertical="top"
+          />
+        </ScrollView>
+      </ThemedView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+    marginBottom: 16,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  cameraContainer: {
+    flex: 2,
+    backgroundColor: '#000',
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginBottom: 16,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  cameraPreview: {
+    flex: 1,
+    minHeight: 200,
+  },
+  controlsContainer: {
+    marginBottom: 16,
+  },
+  promptInput: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 8,
+    marginBottom: 16,
+    fontSize: 16,
+    minHeight: 60,
+    color: '#000',
+    backgroundColor: '#fff',
+  },
+  analyzeButton: {
+    backgroundColor: '#007AFF',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    alignItems: 'center',
+  },
+  analyzeButtonDisabled: {
+    backgroundColor: '#cccccc',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  resultContainer: {
+    flex: 1,
+  },
+  resultScrollView: {
+    flex: 1,
+    marginTop: 8,
+  },
+  resultTextArea: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 14,
+    minHeight: 120,
+    color: '#000',
+    backgroundColor: '#fff',
   },
 });
