@@ -59,6 +59,9 @@ Pod::Spec.new do |s|
 
   s.dependency "React-Core"
   
+  # TurboModules support
+  install_modules_dependencies(s)
+  
   # Swift specific configurations
   s.swift_version = "5.0"
   

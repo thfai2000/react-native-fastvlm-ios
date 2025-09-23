@@ -1,6 +1,6 @@
 {
   "name": "react-native-fastvlm-ios",
-  "version": "0.2.1",
+  "version": "0.2.4",
   "main": "./lib/module/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -30,6 +30,11 @@
     "./package.json": "./package.json"
   },
   "types": "./lib/typescript/src/index.d.ts",
+  "codegenConfig": {
+    "name": "FastVLMCameraModuleSpec",
+    "type": "modules",
+    "jsSrcsDir": "src"
+  },
   "files": [
     "scripts",
     "src",
@@ -63,7 +68,6 @@
   ],
   "dependencies": {
     "react-native": "^0.81.4",
-    "react-native-fastvlm-ios": "^0.1.21",
     "typescript": "^5.9.2"
   }
 }

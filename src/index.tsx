@@ -1,6 +1,6 @@
-
-import { requireNativeComponent, NativeModules, Platform } from 'react-native';
+import { Platform, requireNativeComponent } from 'react-native';
 import type { ViewProps } from 'react-native';
+import NativeFastVLMCameraModule from './NativeFastVLMCameraModule';
 
 const LINKING_ERROR =
   `The package 'react-native-fastvlm-ios' doesn't seem to be linked. Make sure: \n\n` +
@@ -21,7 +21,10 @@ export const CameraPreview = requireNativeComponent<CameraPreviewProps>(Componen
 
 export async function analyzeCameraData(prompt: string): Promise<string> {
   if (Platform.OS !== 'ios') throw new Error('iOS only');
-  const { FastVLMCameraModule } = NativeModules;
-  if (!FastVLMCameraModule) throw new Error(LINKING_ERROR);
-  return FastVLMCameraModule.analyzeCameraData(prompt);
+  
+  if (!NativeFastVLMCameraModule) {
+    throw new Error(LINKING_ERROR);
+  }
+  
+  return await NativeFastVLMCameraModule.analyzeCameraData(prompt);
 }

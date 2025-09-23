@@ -1,9 +1,7 @@
 import Foundation
 import UIKit
 import AVFoundation
-import SwiftUI
 import CoreImage
-import Vision
 import MLXVLM
 import MLXLMCommon
 
@@ -88,7 +86,7 @@ class FastVLMCameraModule: NSObject, RCTBridgeModule {
   }
 
   static func requiresMainQueueSetup() -> Bool {
-    return true
+    return false
   }
 
   private var fastVLMModel: FastVLMModel?
@@ -121,7 +119,34 @@ class FastVLMCameraModule: NSObject, RCTBridgeModule {
         }
         
         // Create UserInput with both image and text prompt for FastVLM
-        let ciImage = CIImage(cgImage: currentImage.cgImage!)
+        // Avoid force-unwrapping `cgImage` which can be nil for some UIImage sources.
+        let ciImage: CIImage?
+        if let cg = currentImage.cgImage {
+          ciImage = CIImage(cgImage: cg)
+        } else if let alt = CIImage(image: currentImage) {
+          ciImage = alt
+        } else {
+          // As a last resort try rendering the UIImage into a CIImage via CG context
+          UIGraphicsBeginImageContextWithOptions(currentImage.size, false, currentImage.scale)
+          currentImage.draw(at: .zero)
+          let rendered = UIGraphicsGetImageFromCurrentImageContext()
+          UIGraphicsEndImageContext()
+          if let renderedCg = rendered?.cgImage {
+            ciImage = CIImage(cgImage: renderedCg)
+          } else {
+            ciImage = nil
+          }
+        }
+
+        guard let ciImage = ciImage else {
+          // If we still can't get a CIImage, fall back to text-only generation
+          let result = try await fastVLMModel.generateResponse(prompt: prompt)
+          DispatchQueue.main.async {
+            resolve(result)
+          }
+          return
+        }
+
         let userInput = UserInput(prompt: .text(prompt), images: [.ciImage(ciImage)])
         let task = await fastVLMModel.generate(userInput)
         _ = await task.result

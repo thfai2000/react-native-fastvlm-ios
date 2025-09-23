@@ -3,7 +3,8 @@ import { Platform, StyleSheet, View, TouchableOpacity, TextInput, ScrollView, Al
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { CameraPreview, analyzeCameraData } from 'react-native-fastvlm-ios';
+// import { CameraPreview, analyzeCameraData } from 'react-native-fastvlm-ios';
+import { analyzeCameraData } from 'react-native-fastvlm-ios';
 
 export default function HomeScreen() {
   const [analysisResult, setAnalysisResult] = useState<string>('');
@@ -19,6 +20,7 @@ export default function HomeScreen() {
     try {
       setIsAnalyzing(true);
       setAnalysisResult('Analyzing...');
+      console.log('Starting analysis with prompt:', prompt);
       const result = await analyzeCameraData(prompt);
       setAnalysisResult(result);
     } catch (error) {
@@ -35,9 +37,9 @@ export default function HomeScreen() {
         <ThemedText type="title">FastVLM Camera Demo</ThemedText>
       </ThemedView>
       
-      <ThemedView style={styles.cameraContainer}>
+      {/* <ThemedView style={styles.cameraContainer}>
         <CameraPreview style={styles.cameraPreview} />
-      </ThemedView>
+      </ThemedView> */}
 
       <ThemedView style={styles.controlsContainer}>
         <ThemedText type="subtitle">Analysis Prompt:</ThemedText>
