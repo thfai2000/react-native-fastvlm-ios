@@ -4,7 +4,7 @@ import { Platform, StyleSheet, View, TouchableOpacity, TextInput, ScrollView, Al
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 // import { CameraPreview, analyzeCameraData } from 'react-native-fastvlm-ios';
-import { analyzeCameraData } from 'react-native-fastvlm-ios';
+import { multiply } from 'react-native-fastvlm-ios';
 
 export default function HomeScreen() {
   const [analysisResult, setAnalysisResult] = useState<string>('');
@@ -20,9 +20,9 @@ export default function HomeScreen() {
     try {
       setIsAnalyzing(true);
       setAnalysisResult('Analyzing...');
-      console.log('Starting analysis with prompt:', prompt);
-      const result = await analyzeCameraData(prompt);
-      setAnalysisResult(result);
+      console.log('XXXXX Starting analysis with prompt:', prompt);
+      const result = await multiply(6, 7);
+      setAnalysisResult(result + " xxxxx");
     } catch (error) {
       console.error('Analysis error:', error);
       setAnalysisResult(`Error: ${error instanceof Error ? error.message : 'Unknown error occurred'}`);

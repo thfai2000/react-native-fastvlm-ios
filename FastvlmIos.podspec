@@ -3,7 +3,7 @@ require "json"
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 
 Pod::Spec.new do |s|
-  s.name         = "react-native-fastvlm-ios"
+  s.name         = "FastvlmIos"
   s.version      = package["version"]
   s.summary      = package["description"]
   s.homepage     = package["homepage"]
@@ -13,20 +13,11 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "18.0" }
   s.source       = { :git => "https://github.com/thfai2000/react-native-fastvlm-ios.git", :tag => "#{s.version}" }
 
-  # We use a pre-compile step to build the binary frameworks for the FastVLM
-  # components (so consumers don't have to compile them and their heavy SPM
-  # dependencies during pod install). The precompile script (below) will
-  # produce frameworks into `ios/compiled/`.
-  # Keep model package files as source resources.
-  # Include package source files in ios/ but exclude any SPM checkouts or
-  # derived build products that may exist during local development. Those
-  # artifacts (found under ios/compiled or ios/**/SourcePackages) can lead
-  # to duplicate-file conflicts when multiple pods embed the same SPM
-  # packages. Keep model files as resources, not source files.
-  s.source_files = [
-    'ios/*.{h,m,mm,swift}',
-    # 'ios/**/*.{h,m,mm,swift,mlmodelc,bin,txt,json,mlmodel,mlpackage}'
-  ]
+  s.source_files = "ios/**/*.{h,m,mm,cpp,swift}"
+  s.private_header_files = "ios/**/*.h"
+
+
+  install_modules_dependencies(s)
 
 
   s.resource_bundles = {
@@ -57,11 +48,7 @@ Pod::Spec.new do |s|
     'SWIFT_INSTALL_OBJC_HEADER' => 'NO'
   }
 
-  s.dependency "React-Core"
-  
-  # TurboModules support
-  install_modules_dependencies(s)
-  
+
   # Swift specific configurations
   s.swift_version = "5.0"
   

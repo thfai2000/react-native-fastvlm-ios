@@ -1,16 +1,19 @@
 {
   "compilerOptions": {
     "rootDir": ".",
+    "paths": {
+      "react-native-fastvlm-ios": ["./src/index"]
+    },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
+    "customConditions": ["react-native-strict-api"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
-    "lib": [
-      "ESNext"
-    ],
+    "lib": ["ESNext"],
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "noImplicitUseStrict": false,
@@ -24,8 +27,4 @@
     "target": "ESNext",
     "verbatimModuleSyntax": true
   }
-  ,
-  "exclude": [
-    "example-app"
-  ]
 }
